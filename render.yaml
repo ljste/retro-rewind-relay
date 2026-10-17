@@ -1,10 +1,11 @@
 services:
   - type: web
     name: retro-rewind-relay
-    runtime: docker
+    runtime: python
     plan: free
     region: virginia
-    dockerfilePath: Dockerfile.relay
+    buildCommand: pip install -r requirements.txt
+    startCommand: python relay_server.py
     healthCheckPath: /health
     envVars:
       - key: ALLOWED_ORIGINS
