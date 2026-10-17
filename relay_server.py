@@ -9,7 +9,7 @@ from http import HTTPStatus
 from websockets.asyncio.server import ServerConnection, serve
 from websockets.http11 import Request, Response
 
-from network_relay import HEADER, PROTOCOL, RelaySession
+from network_relay import HEADER, PROTOCOL, RelaySession, TurnConfig
 
 
 def health(connection: ServerConnection, request: Request) -> Response | None:
@@ -25,7 +25,11 @@ async def accept(connection: ServerConnection) -> None:
     if connection.request is None or connection.request.path != "/network":
         await connection.close(1008, "Unknown relay route")
         return
-    await RelaySession(connection, public_only=True).run()
+    host = os.environ.get("TURN_HOST")
+    turn = TurnConfig(host, int(os.environ.get("TURN_PORT", "443")),
+                      os.environ["TURN_USERNAME"], os.environ["TURN_PASSWORD"],
+                      tls=os.environ.get("TURN_TLS", "1") != "0") if host else None
+    await RelaySession(connection, public_only=True, turn=turn).run()
 
 
 async def main() -> None:

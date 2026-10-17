@@ -15,3 +15,10 @@ has usage limits; the website wakes the relay before launching the engine.
 
 Source is also maintained in the WiiCompiled browser workspace under `web/`.
 Licensed under GPL-3.0. Python dependencies are listed in `requirements.txt`.
+
+Direct UDP through Render changes its public port by destination and fails
+Retro WFC peer negotiation (error 86420). For a stable public UDP endpoint, set
+`TURN_HOST`, `TURN_PORT` (default `443`), `TURN_USERNAME`, and `TURN_PASSWORD`.
+The connection to TURN uses TLS by default. Credentials remain on this server.
+The TURN backend has passed local coturn integration checks; hosted credentials
+and a real online race are still needed to establish deployment readiness.
