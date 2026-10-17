@@ -218,7 +218,8 @@ class RelaySession:
                 raise OSError(errno.EBADF, "Unknown socket")
             native = state.native
             if packet.op == 2:
-                native.bind(destination(packet))
+                # Browser clients have separate virtual interfaces and may reuse the same game port.
+                native.bind(("0.0.0.0", 0) if self.public_only else destination(packet))
                 self.reply(packet)
             elif packet.op == 3:
                 error = native.connect_ex(self.peer(packet))
