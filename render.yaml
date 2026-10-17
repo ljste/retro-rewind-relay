@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: retro-rewind-relay
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: Dockerfile.relay
+    healthCheckPath: /health
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://retro-rewind-web-lj.netlify.app,http://127.0.0.1:8088,http://127.0.0.1:8089

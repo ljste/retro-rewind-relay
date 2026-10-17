@@ -1,0 +1,8 @@
+FROM python:3.13-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY network_relay.py relay_server.py ./
+USER 65532:65532
+EXPOSE 10000
+CMD ["python", "relay_server.py"]
