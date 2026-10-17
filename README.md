@@ -20,5 +20,9 @@ Direct UDP through Render changes its public port by destination and fails
 Retro WFC peer negotiation (error 86420). For a stable public UDP endpoint, set
 `TURN_HOST`, `TURN_PORT` (default `443`), `TURN_USERNAME`, and `TURN_PASSWORD`.
 The connection to TURN uses TLS by default. Credentials remain on this server.
+Cloudflare deployments can instead set `CLOUDFLARE_TURN_KEY_ID` and
+`CLOUDFLARE_TURN_API_TOKEN`. Each browser connection receives fresh 24-hour
+credentials from Cloudflare's HTTPS API. If issuance fails, the relay closes
+that connection rather than falling back to direct UDP.
 The TURN backend has passed local coturn integration checks; hosted credentials
 and a real online race are still needed to establish deployment readiness.
