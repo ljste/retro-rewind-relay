@@ -21,7 +21,7 @@ def turn_config() -> TurnConfig | None:
             f"https://rtc.live.cloudflare.com/v1/turn/keys/{key_id}/credentials/generate-ice-servers",
             data=json.dumps({"ttl": 86400}).encode(),
             headers={"Authorization": f"Bearer {os.environ['CLOUDFLARE_TURN_API_TOKEN']}",
-                     "Content-Type": "application/json"},
+                     "Content-Type": "application/json", "User-Agent": "RetroRewindRelay/1.0"},
             method="POST",
         )
         with urlopen(request, timeout=15) as response:
@@ -57,8 +57,8 @@ async def accept(connection: ServerConnection) -> None:
         return
     try:
         turn = await asyncio.to_thread(turn_config)
-    except Exception:
-        logging.error("Unable to obtain TURN credentials")
+    except Exception as error:
+        logging.error("Unable to obtain TURN credentials (%s)", type(error).__name__)
         await connection.close(1011, "TURN credential service unavailable")
         return
     await RelaySession(connection, public_only=True, turn=turn).run()
