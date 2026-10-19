@@ -52,11 +52,12 @@ def health(connection: ServerConnection, request: Request) -> Response | None:
 
 
 async def accept(connection: ServerConnection) -> None:
-    if connection.request is None or connection.request.path != "/network":
+    if connection.request is None or connection.request.path not in ("/network", "/network/direct"):
         await connection.close(1008, "Unknown relay route")
         return
     try:
-        turn = await asyncio.to_thread(turn_config)
+        turn = (await asyncio.to_thread(turn_config)
+                if connection.request.path == "/network" else None)
     except Exception as error:
         logging.error("Unable to obtain TURN credentials (%s)", type(error).__name__)
         await connection.close(1011, "TURN credential service unavailable")
